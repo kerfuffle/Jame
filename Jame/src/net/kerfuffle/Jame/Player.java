@@ -6,10 +6,15 @@ import org.newdawn.slick.opengl.Texture;
 
 import static net.kerfuffle.Jame.Util.*;
 
+import static org.lwjgl.opengl.GL11.*;
+
 public class Player {
 
 	private float x, y, w, h;
 	private float speed;
+	
+	private boolean lockCameraToPlayer = true;
+ boolean touching = false;
 	
 	private RGB color;
 	private Texture texture;
@@ -25,6 +30,16 @@ public class Player {
 		this.h = h;
 		
 		this.color = color;
+	}
+	
+	public void lockCameraToPlayer(boolean lockCameraToPlayer)
+	{
+		this.lockCameraToPlayer = lockCameraToPlayer;
+	}
+	
+	public void setTouching(boolean touching)
+	{
+		this.touching = touching;
 	}
 	
 	public boolean outLeft(Quad q)
@@ -126,23 +141,68 @@ public class Player {
 		return name;
 	}
 	
+	
+	/*private void centerCamera()
+	{
+		float cX, cY;
+		if (cX < x+(w/2))
+		{
+			
+		}
+	}
+	
+	private float cameraX, cameraY;
+	
+	private void translateLeft(float f)
+	{
+		cameraX -= f;
+	}
+	private void translateUp(float f)
+	{
+		
+	}
+	private void translateDown(float f)
+	{
+		
+	}
+	private void translateRight(float f)
+	{
+		
+	}*/
+	
 	public void checkMovement()
 	{
 		if (Keyboard.isKeyDown(up))
 		{
 			y += speed;
+			if (lockCameraToPlayer && !touching)
+			{
+				glTranslatef(0, -speed, 0);
+			}
 		}
 		if (Keyboard.isKeyDown(down))
 		{
 			y -= speed;
+			if (lockCameraToPlayer && !touching)
+			{
+				glTranslatef(0, speed, 0);
+			}
 		}
 		if (Keyboard.isKeyDown(left))
 		{
 			x -= speed;
+			if (lockCameraToPlayer && !touching)
+			{
+				glTranslatef(speed, 0, 0);
+			}
 		}
 		if (Keyboard.isKeyDown(right))
 		{
 			x += speed;
+			if (lockCameraToPlayer && !touching)
+			{
+				glTranslatef(-speed, 0, 0);
+			}
 		}
 	}
 	

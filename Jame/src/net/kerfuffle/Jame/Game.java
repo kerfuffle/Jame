@@ -9,24 +9,10 @@ public class Game {
 	private Point origin;
 	private Quad bounds;
 	
-	private String map = 
-			"********************\n" +
-			"*                  *\n" +
-			"*                  *\n" +
-			"***                *\n" +
-			"*                  *\n" +
-			"*                  *\n" +
-			"*   **             *\n" +
-			"*    *             *\n" +
-			"*  * *             *\n" +
-			"*  * *             *\n" +
-			"*    ***************\n" +
-			"*                  *\n" +
-			"*                  *\n" +
-			"********************";
+	
 	
 	private ArrayList <Player> players = new ArrayList <Player>();
-	private ArrayList <Quad> quads = makeMap(map);//new ArrayList <Quad>();
+	private ArrayList <Quad> quads = new ArrayList <Quad>();
 	
 	private ArrayList <PlayerMP> mpPlayers = new ArrayList <PlayerMP>();
 	
@@ -59,32 +45,63 @@ public class Game {
 				players.get(i).setX(players.get(i).x() - players.get(i).getSpeed());
 			}
 			
+			boolean touch[] = new boolean[quads.size()];
+			int touchCount = 0;
 			for (int j = 0; j < quads.size(); j++)
 			{
+				
 				if (!quads.get(j).canCollide())
 				{
 					if (players.get(i).hitLeft(quads.get(j)))
 					{
 						players.get(i).setX(players.get(i).x() + players.get(i).getSpeed());
+						touch[j] = true;
 					}
-					if (players.get(i).hitRight(quads.get(j)))
+					else if (players.get(i).hitRight(quads.get(j)))
 					{
 						players.get(i).setX(players.get(i).x() - players.get(i).getSpeed());
+						touch[j] = true;
 					}
-					if (players.get(i).hitUp(quads.get(j)))
+					else if (players.get(i).hitUp(quads.get(j)))
 					{
 						players.get(i).setY(players.get(i).y() + players.get(i).getSpeed());
+						touch[j] = true;
 					}
-					if (players.get(i).hitDown(quads.get(j)))
+					else if (players.get(i).hitDown(quads.get(j)))
 					{
 						players.get(i).setY(players.get(i).y() - players.get(i).getSpeed());
+						touch[j] = true;
+					}
+					else
+					{
+						touch[j] = false;
 					}
 				}
 				
+				if (!touch[j])
+				{
+					touchCount++;
+				}
+				else
+				{
+					players.get(i).setTouching(true);
+				}
+				
+				if(touchCount == quads.size())
+				{
+					players.get(i).setTouching(false);
+					touchCount = 0;
+				}
 			}
+			
 		}
 	}
 	
+	
+	public void customMap(ArrayList <Quad> quads)
+	{
+		this.quads = quads;
+	}
 	
 	public void setBounds(float x, float y, float w, float h)
 	{

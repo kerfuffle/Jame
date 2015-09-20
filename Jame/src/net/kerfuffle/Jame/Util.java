@@ -37,7 +37,7 @@ public class Util {
 	{
 		ArrayList<Quad> ret = new ArrayList<Quad>();
 		
-		String sp[] = str.split("\n");
+		String sp[] = flipArray(str.split("\n"));
 		
 		for (int i = 0 ; i < Main.height/50; i++)
 		{
@@ -49,6 +49,20 @@ public class Util {
 					ret.add(q);
 				}
 			}
+		}
+		
+		return ret;
+	}
+	
+	static String[] flipArray(String str[])
+	{
+		String ret[] = new String[str.length];
+		
+		int count = 0;
+		for (int i = str.length-1; i > -1; i--)
+		{
+			ret[count] = str[i];
+			count++;
 		}
 		
 		return ret;
